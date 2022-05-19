@@ -212,7 +212,7 @@ public class CSVMax {
     }
 
     public void testHottestInDay () {
-        FileResource fr = new FileResource("data/2015/weather-2015-01-01.csv");
+        FileResource fr = new FileResource("data/2014/weather-2014-01-01.csv");
         CSVRecord largest = hottestHourInFile(fr.getCSVParser());
         System.out.println("hottest temperature was " + largest.get("TemperatureF") +
                    " at " + largest.get("TimeEST"));
