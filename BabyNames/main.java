@@ -47,15 +47,19 @@ public class BabyBirths {
     
     public int getRank(int year, String name, String gender) {
         int rankCount = 0;
+        boolean isFound = false;
         //FileResource fr = new FileResource("data/yob" + year + ".csv");
         FileResource fr = new FileResource("data/yob" + year + ".csv");
         for (CSVRecord rec : fr.getCSVParser(false)) {
             if (rec.get(1).equals(gender)) {
                 rankCount += 1;
-                if (rec.get(0).equals(name)){break;}
+                if (rec.get(0).equals(name)){
+                    isFound = true;
+                    break;
+                }
             }
         }
-        if (rankCount == 0) { return -1;}
+        if (isFound == false) { return -1;}
         else {return rankCount;}
     }
     
@@ -87,20 +91,26 @@ public class BabyBirths {
     }
     
     public int yearOfHighestRank(String name, String gender) {
-        int year = 0;
+        int year = Integer.MIN_VALUE;
         int rank = Integer.MAX_VALUE;
         DirectoryResource dr = new DirectoryResource();
+        
         for (File f : dr.selectedFiles()) {
             int currentYear = Integer.parseInt(f.getName().substring(3, 7));
             int currentRank = getRank(currentYear, name, gender);
+            
             if (currentRank != -1 && currentRank < rank) {
                 rank = currentRank;
                 year = currentYear;
             }
+            else {continue;}
         } 
         
-        if (year == 0) {return -1;}
-        else {return year;}
+        if (year == Integer.MIN_VALUE) {
+            return -1;
+        } else {
+            return year;
+        }
     }
     
     public double getAverageRank(String name, String gender) {
@@ -117,9 +127,12 @@ public class BabyBirths {
                     if (rec.get(0).equals(name)){break;}
                 }
             }
-            if (rankCount != 0) {runningTotalRank += rankCount;}  
+            if (rankCount != 0) {
+                runningTotalRank += rankCount;
+            }  
             fileCount += 1;
         }
+        
         if (runningTotalRank > 0) {return runningTotalRank / fileCount;}
         else {return -1.0;}
     }
@@ -145,26 +158,28 @@ public class BabyBirths {
     
     
     public void testGetTotalBirthsRankedHigher() {
-        System.out.println(getTotalBirthsRankedHigher(1990,"Drew","M"));
+        System.out.println(getTotalBirthsRankedHigher(1990,"Emily","F"));
     }
     
     public void testGetAverageRank() {
-        System.out.println(getAverageRank("Robert","M"));
+        System.out.println(getAverageRank("Susan","F"));
     }    
     
     public void testYearOfHighestRank() {
-        String name = "Mason";
+        String name = "Mich";
         String gender = "M";
         System.out.println(name + " most popular year is " + yearOfHighestRank(name, gender));
     }   
     
     public void testWhatIsNameInYear() {
-        System.out.println(whatIsNameInYear("Owen", 1974, 2014, "M"));
+        System.out.println(whatIsNameInYear("Susan", 1972, 2014, "F"));
+        
     }
     
     public void testGetName() {
-        System.out.println(getName(1982, 450, "M"));
+        System.out.println(getName(1980, 350, "F"));
     }    
+    
     
     public void testTotalBirths() {
         //FileResource fr = new FileResource();
@@ -175,6 +190,6 @@ public class BabyBirths {
     public void testGetRank() {
         //FileResource fr = new FileResource();
         //FileResource fr = new FileResource("data/yob2014.csv");
-        System.out.println(getRank(1971, "Frank", "M"));
+        System.out.println(getRank(1960, "Emily", "F"));
     }
 }
